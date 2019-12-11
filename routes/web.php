@@ -18,9 +18,14 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('gallery/list','GalleryController@viewGalleryList');
+/*Route::get('gallery/list','GalleryController@viewGalleryList');
 Route::post('gallery/save','GalleryController@saveGallery');
 
 Route::get('gallery/view/{id}','GalleryController@viewGalleryPics');
-Route::get('image/upload','GalleryController@imageUpload');
-
+*/
+Route::resource('gallery','GalleryController');
+Route::any('image/upload','GalleryController@imageUpload');
+Route::post('deleteImage', 'GalleryController@destroyImage');
+Route::get('more',function(){
+	return 'null sd';
+});
