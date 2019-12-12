@@ -62,7 +62,7 @@ class GalleryController extends Controller
     {
         //dd($gallery->id);
 
-        $images = Image::where('gallery_id',$gallery->id)->orderBy('order_img','ASC')->get();
+        $images = Image::where('gallery_id',$gallery->id)->orderByRaw('order_img = 0, order_img ASC')->get();
 
         
        
@@ -89,7 +89,12 @@ class GalleryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+         $request->validate([
+            'order_img' => 'nullable|numeric',
+        ],['order_img.numeric'=>'Input Numeric value only']);
+        $image = Image::findOrFail($id);
+       $image->update(['order_img'=>$request->order_img]);
+       return redirect()->back();
     }
 
     /**
@@ -114,18 +119,19 @@ class GalleryController extends Controller
             'created_by'=>Auth::user()->id,
         ]);*/
 
+        $gallery = Gallery::findOrFail($request->gallery_id);
          $photos = $request->file('file');
-        $save_name = $photos->getClientOriginalName();
+            $save_name = $photos->getClientOriginalName();
        
-         $photos->move(public_path('galleryImg/images'), $save_name);
-         $gallery = Gallery::findOrFail($request->gallery_id);
+         $photos->move(public_path('galleryImg/'.$gallery->name), $save_name);
+         
 
          $image = $gallery->images()->create([
             'gallery_id'=>$request->gallery_id,
             'file_name'=> $save_name,
             'file_size'=>'343',
             'file_mime'=>$photos->getClientMimeType(),
-            'file_path'=>'/galleryImg/images/' . $save_name,
+            'file_path'=>'/galleryImg/' . $gallery->name .'/'. $save_name,
             'created_by'=>Auth()->user()->id,
         ]);
         
@@ -139,15 +145,19 @@ class GalleryController extends Controller
         return redirect()->route('gallery.index')
                         ->with('success','Product deleted successfully');
     }
-    public function destroyImage(Image $image)
+    public function destroyImage(Image $image ,$id)
     {
-        $image->delete();
-       die( $filename =  $image->file_name);
+
+        $image=Image::findOrFail($id);
+
+        $image->delete($image->id);
+       
         
-        $path=public_path('/galleryImg/images/').$filename;
+        $path=public_path().$image->file_path;
+        
         if (file_exists($path)) {
             unlink($path);
         }
-        return $filename;  
+        return redirect()->back()->with('success', 'The selected Image has been deleted  from db and  the local folder!'); 
     }
 }

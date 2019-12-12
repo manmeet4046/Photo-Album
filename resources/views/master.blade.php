@@ -40,7 +40,7 @@
         </form>
       </div>
     </nav>
-	<div class="container">dropzone.min.js
+	<div class="container">
 		@yield('content')
 	</div>
 

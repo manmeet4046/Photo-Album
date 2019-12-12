@@ -19,58 +19,65 @@
 </style>
 
     <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2> View Gallery</h2>
+       
+            <div class="col-lg-6  pull-left">
+                <h4> Add Images to  Gallery (<span style="color:maroon;" >{{ ucfirst($gallery->name) }}</span>) </h4>
             </div>
-            <div class="pull-right">
+            <div class=" col-lg-6 pull-right text-right">
                 <a class="btn btn-primary btn-xs" href="{{ route('gallery.index') }}"> Back</a>
             </div>
-        </div>
+        
     </div>
-   
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Name:</strong>
-                {{ $gallery->name }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Details:</strong>
-                {{ $gallery->published }}
-            </div>
-        </div>
-    </div>
+    <div>Note: Click on Drop Zone to upload multiple files or Drag & Drop the file(s) to upload.</div>
+
+  <hr>
     <div class="row justify-content-md-center">
-        <div class="col-md-8 text-right">
+        <div class="col-md-2"></div><div class="col-md-8 text-right">
          <form method="post" action="{{url('image/upload')}}" 
                   class="dropzone" id="dropzone" enctype="multipart/form-data">
     @csrf
     @method('POST')
+    <div style="color:red;"> Drop Zone</div>
     <input type="hidden" name="gallery_id" value={{$gallery->id}}>
    
 </form>   
         </div>
+        <div class="col-md-2">
+         @if (Session::has('success'))
+          <div class="alert alert-info">
+        {!! Session::get('success') !!}     
+       </div>
+        @endif
+</div>
     </div>
+    <hr>
+<br/>
+  <div class="row justify-content-md-center mb-3"> @error('order_img')
+    <div class="badge text-danger">Error ! {{ $message }}</div>
+@enderror</div>
+  <div class="row justify-content-md-center">  
+    
+           @foreach($images as $image)
+           <div class="form-group justify-content-md-left ">
+             <form class="form-horizontal" action="{{ route('gallery.update', $image->id) }}" method="post" >
+  @csrf
+  @method('PUT')
+    <img src="{{$image->file_path}}" class="mb-2" width="220" height="200">
+    <div class="col-md-12 text-left mr-5 mb-5">
+     <input type="" name="order_img" class="input-group-prepend input-sm" size="8" value="{{($image->order_img==0)?'':$image->order_img}}" style="display:inline-block;" >
+      <input class="btn btn-xs btn-primary  " style="margin-left:10px" type="submit" name="" value="Change Order">
 
-  <div class="row">   <div class="col-md-12">
-            @foreach($images as $image)
-            
-
-              
-               <form>    
+    </div>
  
-           <img src="{{$image->file_path}}" class="" width="200">
-          
-          <br/>
-           <input type="" name="" class="input-group-prepend" value="{{$image->order_img}}">
-           <input class="btn btn-xs btn-primary  .input-group-prepend" type="submit" name="" value="Change Order">
-</form>
+ 
+</form> 
+<form class="form-horizontal" style="margin-top: -40px;margin-left:70px" action="{{ route('deleteImage',$image->id) }}" onsubmit="return confirm('Do you really want to delete?');" method="post">
+ @csrf
+@method('DELETE') <input class="btn btn-xs btn-info  input-group-prepend" type="submit" name="" value="Remove"></form><hr> </div>
             @endforeach
-        </div> 
-     </div>      
+    
+       
+     </div>  
      
 
     

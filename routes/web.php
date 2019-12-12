@@ -25,7 +25,7 @@ Route::get('gallery/view/{id}','GalleryController@viewGalleryPics');
 */
 Route::resource('gallery','GalleryController');
 Route::any('image/upload','GalleryController@imageUpload');
-Route::post('deleteImage', 'GalleryController@destroyImage');
+Route::delete('deleteImage/{id}', 'GalleryController@destroyImage')->name('deleteImage');
 Route::get('more',function(){
 	return 'null sd';
 });
