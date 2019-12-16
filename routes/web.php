@@ -29,3 +29,4 @@ Route::delete('deleteImage/{id}', 'GalleryController@destroyImage')->name('delet
 Route::get('more',function(){
 	return 'null sd';
 });
+Route::get('/slideshow/{gallery}','GalleryController@slideshow')->name('gallery.slideshow');

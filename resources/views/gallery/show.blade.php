@@ -39,7 +39,7 @@
     @method('POST')
     <div style="color:red;"> Drop Zone</div>
     <input type="hidden" name="gallery_id" value={{$gallery->id}}>
-   
+  
 </form>   
         </div>
         <div class="col-md-2">
@@ -79,7 +79,10 @@
        
      </div>  
      
-
+<style>.dz-error{
+color: blue;
+}
+</style>
     
     <script type="text/javascript">
         Dropzone.options.dropzone =
@@ -101,6 +104,7 @@
                                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                             },
                     type: 'POST',
+                    addRemoveLinks: true,
                     url: '{{ url("/deleteImage") }}',
                     data: {filename: name},
                     success: function (data){
@@ -108,6 +112,7 @@
                     },
                     error: function(e) {
                         console.log(e);
+
                     }});
                     var fileRef;
                     return (fileRef = file.previewElement) != null ? 
@@ -115,10 +120,14 @@
             },
             success: function(file, response) 
             {
+                $(file.previewElement).addClass("dz-success").find('.dz-success-message').text(response  + ' Check allowed format and Size of the file ' );
+               location.reload();
                 console.log(response);
             },
-            error: function(file, response)
+            error: function(file, message)
             {
+
+               $(file.previewElement).addClass("dz-error").find('.dz-error-message').text(message.message  + ' Check allowed format and Size of the file ' );
                return false;
             }
 };

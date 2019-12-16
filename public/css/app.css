@@ -111,6 +111,17 @@ abbr[data-original-title] {
           text-decoration-skip-ink: none;
 }
 
+  .dz-error-message{
+    top: -80px !important;
+    text-align: left;
+
+  }
+  .dz-error-message:after{
+    border-top: 6px solid #be2626 !important;
+    border-bottom: none !important;
+    top: 60px !important;
+    
+  }
 address {
   margin-bottom: 1rem;
   font-style: normal;

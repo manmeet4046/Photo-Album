@@ -18,6 +18,7 @@ class CreateGalleriesTable extends Migration
             $table->string('name');
             $table->integer('created_by')->default(1);
             $table->boolean('published')->default(1);
+            $table->string('image_path');
 
             $table->timestamps();
         });
